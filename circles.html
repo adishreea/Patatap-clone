@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Circles</title>
+		<link rel="stylesheet" type="text/css" href="circles.css">
+		
+		<!-- jQuery library -->
+		<script type="text/javascript" src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+		
+		<!-- Load the Paper.js library -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.24/paper-full.min.js"></script>
+
+		<!-- Load the Howler.js library -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.9/howler.core.min.js"></script>
+		
+		<!-- Define inlined PaperScript and associate it with myCanvas -->
+		<script type="text/paperscript" canvas="myCanvas">
+			var circleArray = [];
+
+			var key = {
+				a: {
+					color: "red",
+					sound: new Howl({
+						src: ['sounds/bubbles.mp3']
+					})
+				},
+				f: {
+					color: "green",
+					sound: new Howl({
+						src: ['sounds/squiggle.mp3']
+					})
+				},
+				s: {
+					color: "yellow",
+					sound: new Howl({
+						src: ['sounds/confetti.mp3']
+					})
+				}
+			};
+
+
+
+			function onKeyDown(event) {
+				var maxPoint = new Point(view.size.width, view.size.height);
+				var randomPoint = Point.random();
+				var point = maxPoint * randomPoint;
+				var myCircle = new Path.Circle(point, 50);
+				
+				if(key[event.key]){					
+					myCircle.fillColor = key[event.key].color;
+					key[event.key].sound.play();
+					
+				} else{
+					myCircle.fillColor = "white";
+					var sound = new Howl({
+						src: ['sounds/moon.mp3']
+					});
+					sound.play();
+				}
+
+				circleArray.push(myCircle);
+			}
+
+			function onFrame(event){
+				for(var i = 0; i < circleArray.length; i++){
+					circleArray[i].fillColor.hue += 1;
+					circleArray[i].scale(.9);
+				}
+			}
+
+		
+		</script>
+	</head>
+	<body>
+		<canvas id="myCanvas" resize="true" keepalive="true">		
+		</canvas>
+
+	</body>
+</html>
+
+<!-- example - create a grid of circles
+for(var x = 0; x < 1001; x += 100){
+				for(var y = 0; y < 1001; y += 100){
+					var myCircle = new Path.Circle(new Point(x, y), 10);
+					myCircle.fillColor = "purple";
+				}
+			} -->
